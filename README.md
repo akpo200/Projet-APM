@@ -11,3 +11,5 @@ Grafana (Dashboard préconfiguré) : http://localhost:3000
 Prometheus : http://localhost:9090
 
 Le rapport explicatif détaillé se trouve dans le fichier rapport_analyse.md.
+
+Source des données: https://github.com/logpai/loghub/tree/master/HDFS
