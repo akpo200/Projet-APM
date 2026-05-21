@@ -1,4 +1,5 @@
 APM - Détection d'Anomalies de Performance Applicative par Pascale Nancy Alia AKPO
+
 Ce projet implémente un pipeline complet de surveillance des performances applicatives (APM) avec détection d'anomalies en temps réel grâce à l'apprentissage automatique (Machine Learning).
 
 Architecture du Pipeline
