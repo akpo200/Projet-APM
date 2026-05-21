@@ -1,0 +1,6 @@
+# Copyright par Pascale Nancy Alia AKPO
+pyspark==3.4.1
+prometheus_client==0.17.1
+pandas==2.0.3
+numpy<2.0.0
+scikit-learn==1.3.0

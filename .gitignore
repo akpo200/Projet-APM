@@ -1,0 +1,20 @@
+# Copyright par Pascale Nancy Alia AKPO
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.ipynb_checkpoints/
+
+# Fichiers de données volumineux
+*.log
+HDFS_2k.log
+
+# Environnements virtuels
+.venv/
+env/
+venv/
+ENV/
+
+# Fichiers système
+.DS_Store
+Thumbs.db

@@ -1,0 +1,16 @@
+# Copyright par Pascale Nancy Alia AKPO
+FROM python:3.9-bullseye
+
+# Installation de Java (requis pour Spark, version 11 recommandée)
+RUN apt-get update && \
+    apt-get install -y openjdk-11-jre-headless && \
+    rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+COPY requirements_spark.txt .
+RUN pip install --no-cache-dir -r requirements_spark.txt
+
+COPY spark_ml.py .
+
+CMD ["python", "spark_ml.py"]
