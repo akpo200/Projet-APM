@@ -48,8 +48,10 @@ def process_batch(df, epoch_id):
     
     # Analyse ML : Isolation Forest
     # On a besoin d'un peu de données pour entrainer le modèle
+    # Analyse ML : Isolation Forest
     is_anomaly = 0
     anomaly_score = 0.0
+    anomaly_type = "Aucune"
     
     if len(history_buffer) >= 5:
         # Entrainement sur l'historique récent
@@ -65,11 +67,30 @@ def process_batch(df, epoch_id):
         if prediction == -1:
             is_anomaly = 1
             print(f"Anomalie détectée ! Score : {anomaly_score}")
+            
+            # Classification simplifiée de la cause racine en scannant le texte des logs
+            log_texts = pdf['value'].tolist() if 'value' in pdf.columns else []
+            block_issues = sum(1 for log in log_texts if "block" in log.lower() or "blk_" in log.lower())
+            exceptions = sum(1 for log in log_texts if "exception" in log.lower() or "error" in log.lower() or "fail" in log.lower())
+            
+            if block_issues > exceptions and block_issues > 0:
+                anomaly_type = "Replication / Allocation de bloc HDFS (HDFS Block Issue)"
+            elif exceptions > 0:
+                anomaly_type = "Exception / Erreur logicielle Java (Java Software Exception)"
+            else:
+                anomaly_type = "Pic de charge quantitatif (Volume de logs inhabituel)"
         else:
             print(f"Comportement normal. Score : {anomaly_score}")
             
     g_anomaly_score.set(anomaly_score)
     g_is_anomaly.set(is_anomaly)
+    
+    # Envoi du type d'anomalie spécifique au Dashboard Web en temps réel
+    try:
+        import requests
+        requests.post("http://dashboard-web:8080/api/anomaly-type", json={"type": anomaly_type}, timeout=1.5)
+    except Exception as e:
+        print(f"Erreur d'envoi du type d'anomalie au dashboard : {e}")
     
     # Envoi des métriques vers Prometheus Pushgateway
     try:

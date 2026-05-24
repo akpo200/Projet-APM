@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soutenance APM - Pascale Nancy Alia AKPO</title>
+    <!-- Chargement de polices Google Fonts modernes et épurées -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@300;400;500;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ==========================================================================
+           CONCEPTION DU DESIGN SYSTEM & VARIABLES (AESTHETICS & MODE SOMBRE)
+           ========================================================================== */
+        :root {
+            --bg-main: #0b0f19;          /* Fond général bleu nuit profond */
+            --bg-card: rgba(17, 24, 39, 0.7); /* Effet de verre (glassmorphism) */
+            --border-card: rgba(255, 255, 255, 0.08);
+            
+            /* Palette de couleurs dynamique Fintech & Temps Réel */
+            --color-primary: #06b6d4;     /* Cyan électrique pour l'ingestion/le flux */
+            --color-secondary: #8b5cf6;   /* Violet néon pour le Machine Learning */
+            --color-success: #10b981;     /* Vert émeraude pour l'état Normal */
+            --color-danger: #ef4444;      /* Rouge écarlate pour les Anomalies */
+            --color-text-main: #f3f4f6;   /* Gris très clair pour la lisibilité */
+            --color-text-muted: #9ca3af;  /* Gris moyen pour les explications secondaires */
+            
+            --transition-speed: 0.5s;
+            --font-title: 'Outfit', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --font-mono: 'Fira Code', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--color-text-main);
+            font-family: var(--font-body);
+            overflow: hidden; /* Empêche les barres de défilement pour un format slide */
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.15) 0%, transparent 40%);
+        }
+
+        /* ==========================================================================
+           STRUCTURE DE LA PRÉSENTATION DE SLIDES
+           ========================================================================== */
+        header {
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-card);
+            backdrop-filter: blur(10px);
+            z-index: 10;
+        }
+
+        .logo-area {
+            font-family: var(--font-title);
+            font-weight: 800;
+            font-size: 1.4rem;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .author-tag {
+            font-size: 0.9rem;
+            color: var(--color-text-muted);
+            border-left: 2px solid var(--color-secondary);
+            padding-left: 10px;
+        }
+
+        .slides-container {
+            position: relative;
+            flex-grow: 1;
+            width: 100%;
+            height: 70%;
+        }
+
+        /* Chaque diapositive est masquée par défaut et positionnée de façon absolue */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(50px);
+            transition: opacity var(--transition-speed) ease, 
+                        transform var(--transition-speed) ease,
+                        visibility var(--transition-speed);
+            padding: 40px 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Diapositive active : visible avec animation */
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0);
+        }
+
+        /* ==========================================================================
+           COMPOSANTS ESTHÉTIQUES ET TEXTES
+           ========================================================================== */
+        h1 {
+            font-family: var(--font-title);
+            font-weight: 800;
+            font-size: 3rem;
+            line-height: 1.2;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #ffffff 30%, var(--color-text-muted) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .slide h2 {
+            font-family: var(--font-title);
+            font-weight: 600;
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            color: var(--color-primary);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .highlight-text {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
+
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+            height: 90%;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: 16px;
+            padding: 30px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(6, 182, 212, 0.3);
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        li {
+            margin-bottom: 15px;
+            position: relative;
+            padding-left: 25px;
+            line-height: 1.6;
+            color: var(--color-text-main);
+        }
+
+        /* Petites puces customisées pour le look moderne */
+        li::before {
+            content: "✦";
+            position: absolute;
+            left: 0;
+            color: var(--color-primary);
+            font-weight: bold;
+        }
+
+        /* ==========================================================================
+           CONTRÔLES DE NAVIGATION & BAS DE PAGE
+           ========================================================================== */
+        footer {
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--border-card);
+            background: rgba(11, 15, 25, 0.9);
+            z-index: 10;
+        }
+
+        .nav-controls {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            color: var(--color-text-main);
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: var(--font-title);
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            outline: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn:hover {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            border-color: transparent;
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+            transform: scale(1.05);
+        }
+
+        .nav-btn:active {
+            transform: scale(0.98);
+        }
+
+        .progress-bar-container {
+            flex-grow: 1;
+            margin: 0 40px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .slide-counter {
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            color: var(--color-text-muted);
+            min-width: 60px;
+            text-align: right;
+        }
+
+        /* Keyboard hint badge */
+        .kbd-badge {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            margin: 0 3px;
+            color: var(--color-text-main);
+        }
+
+        /* ==========================================================================
+           SLIDE 1 : PAGE DE GARDE ELEGANTE
+           ========================================================================== */
+        .slide-title-page {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .banner-glow {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: var(--color-secondary);
+            filter: blur(150px);
+            opacity: 0.2;
+            pointer-events: none;
+            border-radius: 50%;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            font-weight: 800;
+        }
+
+        .hero-subtitle {
+            font-size: 1.6rem;
+            color: var(--color-text-muted);
+            margin-bottom: 50px;
+            max-width: 800px;
+            line-height: 1.4;
+        }
+
+        .author-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 20px 40px;
+            border-radius: 50px;
+            display: inline-flex;
+            gap: 20px;
+            font-size: 1.1rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .author-box span strong {
+            color: var(--color-primary);
+        }
+
+        /* ==========================================================================
+           SLIDE 3 : ANIMATION DU PIPELINE (INTERACTIVE)
+           ========================================================================== */
+        .pipeline-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 40px;
+            position: relative;
+            padding: 20px 0;
+            overflow: visible;
+        }
+
+        /* Ligne de connexion physique entre les briques */
+        .pipeline-line {
+            position: absolute;
+            top: 50%;
+            left: 5%;
+            width: 90%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 1;
+            transform: translateY(-50%);
+        }
+
+        /* Particules en mouvement symbolisant le flux de données */
+        .data-particle {
+            position: absolute;
+            top: 50%;
+            width: 10px;
+            height: 10px;
+            background: var(--color-primary);
+            border-radius: 50%;
+            transform: translateY(-50%);
+            box-shadow: 0 0 10px var(--color-primary);
+            animation: flowParticle 4s infinite linear;
+            z-index: 2;
+        }
+
+        .data-particle-2 {
+            animation-delay: 1.5s;
+        }
+        
+        .data-particle-3 {
+            animation-delay: 2.8s;
+            background: var(--color-secondary);
+            box-shadow: 0 0 10px var(--color-secondary);
+        }
+
+        @keyframes flowParticle {
+            0% { left: 8%; opacity: 0; }
+            5% { opacity: 1; }
+            95% { opacity: 1; }
+            100% { left: 92%; opacity: 0; }
+        }
+
+        .pipeline-node {
+            background: var(--bg-card);
+            border: 2px solid var(--border-card);
+            border-radius: 12px;
+            padding: 15px;
+            width: 14%;
+            text-align: center;
+            z-index: 3;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+        }
+
+        .pipeline-node.active, .pipeline-node:hover {
+            border-color: var(--color-primary);
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
+            transform: translateY(-5px);
+        }
+
+        .pipeline-node.ml-node.active, .pipeline-node.ml-node:hover {
+            border-color: var(--color-secondary);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+        }
+
+        .node-icon {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .node-name {
+            font-family: var(--font-title);
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .node-tech {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--color-primary);
+        }
+
+        .ml-node .node-tech {
+            color: var(--color-secondary);
+        }
+
+        .pipeline-desc-box {
+            margin-top: 40px;
+            min-height: 100px;
+            padding: 20px;
+            border-left: 4px solid var(--color-primary);
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 0 8px 8px 0;
+            transition: all 0.3s ease;
+        }
+
+        /* ==========================================================================
+           SLIDE 4 : EXPLORATION LOGS HDFS
+           ========================================================================== */
+        .hdfs-log-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .log-box {
+            background: #030712;
+            border: 1px solid #1f2937;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            max-height: 320px;
+            overflow-y: auto;
+            color: #9ca3af;
+        }
+
+        .log-line {
+            margin-bottom: 8px;
+            border-left: 2px solid transparent;
+            padding-left: 8px;
+        }
+
+        .log-line.info { border-color: var(--color-primary); }
+        .log-line.warn { border-color: #f59e0b; color: #fde047; }
+        .log-line.error { border-color: var(--color-danger); color: #fca5a5; }
+
+        .log-accent-cyan { color: #22d3ee; }
+        .log-accent-purple { color: #c084fc; }
+
+        /* ==========================================================================
+           SLIDE 5 : EXPLICATION MACHINE LEARNING (ISOLATION FOREST)
+           ========================================================================== */
+        .ml-concept-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        /* Visualisation d'un arbre d'isolation de données */
+        .tree-visualizer {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-card);
+            border-radius: 16px;
+            padding: 20px;
+            height: 320px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .tree-svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .node-circle {
+            fill: #1e293b;
+            stroke: #475569;
+            stroke-width: 2;
+            transition: all 0.3s ease;
+        }
+
+        .node-circle.anomaly {
+            stroke: var(--color-danger);
+            fill: rgba(239, 68, 68, 0.2);
+            animation: pulse-red-node 1.5s infinite alternate;
+        }
+
+        @keyframes pulse-red-node {
+            0% { fill: rgba(239, 68, 68, 0.1); stroke-width: 2; }
+            100% { fill: rgba(239, 68, 68, 0.4); stroke-width: 4; }
+        }
+
+        .link-line {
+            stroke: #334155;
+            stroke-width: 2;
+        }
+
+        .link-line.anomaly-path {
+            stroke: var(--color-danger);
+            stroke-dasharray: 4;
+            animation: dash 1s linear infinite;
+        }
+
+        @keyframes dash {
+            to { stroke-dashoffset: -20; }
+        }
+
+        .tree-legend {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            display: flex;
+            gap: 15px;
+            font-size: 0.75rem;
+            font-family: var(--font-mono);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* ==========================================================================
+           SLIDE 6 : CONSOLE DE LOGS SIMULÉE (DEMO LIVE CONSOLE)
+           ========================================================================== */
+        .live-console-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .spark-stream-console {
+            background: #020617;
+            border: 1px solid #1e293b;
+            border-radius: 12px;
+            padding: 15px;
+            height: 320px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            position: relative;
+        }
+
+        .console-header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 8px;
+            color: var(--color-text-muted);
+            font-size: 0.8rem;
+        }
+
+        .console-flow {
+            flex-grow: 1;
+            overflow-y: hidden;
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .console-line {
+            opacity: 0;
+            transform: translateY(10px);
+            animation: fadeInUpLine 0.3s forwards;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        @keyframes fadeInUpLine {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .line-timestamp { color: var(--color-text-muted); }
+        
+        .line-message { flex-grow: 1; margin-left: 10px; }
+        
+        .line-status {
+            font-weight: bold;
+            padding: 1px 6px;
+            border-radius: 4px;
+        }
+
+        .line-status.normal {
+            color: var(--color-success);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .line-status.anomaly {
+            color: var(--color-danger);
+            background: rgba(239, 68, 68, 0.1);
+            animation: blinker-danger 1s linear infinite;
+        }
+
+        @keyframes blinker-danger {
+            50% { opacity: 0.4; }
+        }
+
+        .btn-start-stream {
+            background: var(--color-secondary);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: var(--font-title);
+            font-weight: 600;
+            font-size: 0.8rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-start-stream:hover {
+            background: #7c3aed;
+            box-shadow: 0 0 10px rgba(124, 58, 237, 0.4);
+        }
+
+        /* ==========================================================================
+           SLIDE 7 : TABLEAU DE BORD GRAFANA SIMULÉ
+           ========================================================================== */
+        .grafana-simulator {
+            background: #161719; /* Gris sombre officiel Grafana */
+            border: 1px solid #2c2c2e;
+            border-radius: 12px;
+            padding: 20px;
+            height: 340px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            color: #d8d9da;
+        }
+
+        .grafana-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #2c2c2e;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .grafana-title {
+            font-family: var(--font-title);
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .grafana-refresh {
+            font-size: 0.75rem;
+            color: #10b981;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-family: var(--font-mono);
+        }
+
+        .grafana-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            flex-grow: 1;
+        }
+
+        .grafana-panel {
+            background: #181b1f;
+            border: 1px solid #22252b;
+            border-radius: 6px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .panel-title {
+            font-size: 0.8rem;
+            color: #8e9093;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .panel-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            font-family: var(--font-title);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+        }
+
+        .panel-value.cyan-val { color: #38bdf8; }
+        .panel-value.purple-val { color: #a78bfa; }
+        .panel-value.red-val { color: #fca5a5; }
+
+        .grafana-chart-container {
+            width: 100%;
+            height: 60px;
+            margin-top: 10px;
+        }
+
+        .pulse-light {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--color-success);
+            position: absolute;
+            top: 15px;
+            right: 15px;
+        }
+
+        .pulse-light.anomaly-on {
+            background: var(--color-danger);
+            animation: blinker-danger 0.8s infinite alternate;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==========================================================================
+         EN-TÊTE FIXE (TITRE DU PROJET & PRESENTATRICE)
+         ========================================================================== -->
+    <header>
+        <div class="logo-area">
+            <span>⚙️ APM Engine</span>
+            <span class="author-tag">Pascale Nancy Alia AKPO</span>
+        </div>
+        <div style="font-family: var(--font-title); font-size: 0.9rem; color: var(--color-text-muted);">
+            Soutenance de Projet Big Data & ML
+        </div>
+    </header>
+
+    <!-- ==========================================================================
+         CONTENEUR PRINCIPAL DE DIAPOSITIVES (SLIDES)
+         ========================================================================== -->
+    <div class="slides-container">
+
+        <!-- ==========================================
+             SLIDE 1 : PAGE DE GARDE
+             ========================================== -->
+        <div class="slide slide-title-page active" id="slide-0">
+            <div class="banner-glow"></div>
+            <h1 class="hero-title">Détection d'Anomalies de Performance Applicative <br><span class="highlight-text">(APM)</span></h1>
+            <p class="hero-subtitle">Conception et implémentation d'un pipeline Big Data en temps réel avec apprentissage automatique non supervisé (Isolation Forest).</p>
+            <div class="author-box">
+                <span>Présentatrice : <strong>Pascale Nancy Alia AKPO</strong></span>
+                <span>•</span>
+                <span>Filière : <strong>Master Big Data & Streaming Analytics</strong></span>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             SLIDE 2 : PROBLEMATIQUE & CONTEXTE
+             ========================================== -->
+        <div class="slide" id="slide-1">
+            <h2>Problématique & Contexte Applicatif</h2>
+            <div class="grid-2col">
+                <div class="card">
+                    <h3 style="color: var(--color-secondary); margin-bottom: 15px; font-family: var(--font-title);">Le Défi Industriel</h3>
+                    <p style="line-height: 1.6; margin-bottom: 15px; color: var(--color-text-muted);">
+                        Dans les architectures modernes (Microservices, Cloud, Systèmes Distribués), les serveurs génèrent en continu des **millions de lignes de logs** par minute.
+                    </p>
+                    <ul>
+                        <li><strong>Échelle massive</strong> : Analyse humaine manuelle rigoureusement impossible.</li>
+                        <li><strong>Impact financier</strong> : Une panne ou un ralentissement applicatif non détecté à temps peut coûter des milliers d'euros par minute.</li>
+                        <li><strong>Limites du statique</strong> : Les règles de seuils traditionnelles échouent face à des pannes complexes ou inconnues.</li>
+                    </ul>
+                </div>
+                <div class="card" style="border-color: rgba(139, 92, 246, 0.2);">
+                    <h3 style="color: var(--color-primary); margin-bottom: 15px; font-family: var(--font-title);">Notre Objectif APM</h3>
+                    <p style="line-height: 1.6; margin-bottom: 15px; color: var(--color-text-muted);">
+                        Créer une solution logicielle intelligente et automatisée, capable de :
+                    </p>
+                    <ul>
+                        <li><strong>Ingérer</strong> et transporter les logs applicatifs en direct.</li>
+                        <li><strong>Analyser</strong> le comportement du système toutes les 5 secondes grâce à l'apprentissage automatique (Machine Learning).</li>
+                        <li><strong>Signaler</strong> instantanément les écarts ou anomalies comportementales au travers d'alertes visuelles sur un dashboard interactif.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             SLIDE 3 : ARCHITECTURE DU PIPELINE
+             ========================================== -->
+        <div class="slide" id="slide-2">
+            <h2>Architecture Technologique du Pipeline</h2>
+            <p style="color: var(--color-text-muted); font-size: 1.05rem;">
+                Le voyage de la donnée : du log brut généré sur l'infrastructure jusqu'à la visualisation graphique finale.
+            </p>
+            
+            <!-- Composant interactif de Pipeline -->
+            <div class="pipeline-container">
+                <div class="pipeline-line"></div>
+                <div class="data-particle"></div>
+                <div class="data-particle data-particle-2"></div>
+                <div class="data-particle data-particle-3"></div>
+                
+                <div class="pipeline-node active" onclick="showNodeDesc('hdfs')">
+                    <div class="node-icon">💾</div>
+                    <div class="node-name">Logs Source</div>
+                    <div class="node-tech">HDFS Logs</div>
+                </div>
+                <div class="pipeline-node" onclick="showNodeDesc('producer')">
+                    <div class="node-icon">🚀</div>
+                    <div class="node-name">Producteur</div>
+                    <div class="node-tech">Python Script</div>
+                </div>
+                <div class="pipeline-node" onclick="showNodeDesc('kafka')">
+                    <div class="node-icon">📥</div>
+                    <div class="node-name">Broker</div>
+                    <div class="node-tech">Apache Kafka</div>
+                </div>
+                <div class="pipeline-node ml-node" onclick="showNodeDesc('spark')">
+                    <div class="node-icon">⚡</div>
+                    <div class="node-name">Traitement</div>
+                    <div class="node-tech">Spark Streaming</div>
+                </div>
+                <div class="pipeline-node" onclick="showNodeDesc('prometheus')">
+                    <div class="node-icon">📊</div>
+                    <div class="node-name">Métriques</div>
+                    <div class="node-tech">Prometheus</div>
+                </div>
+                <div class="pipeline-node" onclick="showNodeDesc('grafana')">
+                    <div class="node-icon">🖥️</div>
+                    <div class="node-name">Dashboard</div>
+                    <div class="node-tech">Grafana UI</div>
+                </div>
+            </div>
+
+            <!-- Encadré descriptif dynamique mis à jour par JavaScript -->
+            <div class="pipeline-desc-box" id="pipeline-desc">
+                <strong style="color: var(--color-primary); font-size: 1.1rem;">Cliquez sur un composant du schéma ci-dessus</strong> pour comprendre son rôle précis et sa configuration au sein du projet.
+            </div>
+        </div>
+
+        <!-- ==========================================
+             SLIDE 4 : STRUCTURE LOGS & PREPARATION
+             ========================================== -->
+        <div class="slide" id="slide-3">
+            <h2>Étape 1 : Exploration & Préparation des Logs HDFS</h2>
+            <div class="hdfs-log-grid">
+                <div class="card">
+                    <h3 style="color: var(--color-primary); margin-bottom: 15px; font-family: var(--font-title);">1. Structure des Logs HDFS Bruts</h3>
+                    <p style="font-size: 0.95rem; color: var(--color-text-muted); margin-bottom: 15px;">
+                        Les fichiers de logs HDFS contiennent des enregistrements textuels bruts. Le producteur lit ces données et extrait à la volée les attributs structurels :
+                    </p>
+                    <div class="log-box">
+                        <div class="log-line info"><span class="line-timestamp">081109 203518</span> 143 <span class="log-accent-cyan">INFO</span> dfs.DataNode$DataXceiver: Receiving block blk_-160899968691</div>
+                        <div class="log-line info"><span class="line-timestamp">081109 203519</span> 143 <span class="log-accent-cyan">INFO</span> dfs.DataNode$DataXceiver: Received block blk_-160899968691 size 91208</div>
+                        <div class="log-line warn"><span class="line-timestamp">081109 203525</span> 144 <span class="log-accent-purple">WARN</span> dfs.DataNode$DataTransfer: Verification failed for block blk_-16089996</div>
+                        <div class="log-line error"><span class="line-timestamp">081109 203530</span> 145 <span class="log-accent-purple">ERROR</span> dfs.DataNode: IOException: Block blk_-16089996 is corrupted</div>
+                    </div>
+                </div>
+                <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <h3 style="color: var(--color-secondary); margin-bottom: 15px; font-family: var(--font-title);">2. Agrégation par Fenêtre Temporelle</h3>
+                        <p style="line-height: 1.6; color: var(--color-text-muted); margin-bottom: 15px;">
+                            Pour alimenter un modèle de Machine Learning, nous ne pouvons pas envoyer de texte brut directement. Spark Structured Streaming effectue des agrégations par **micro-batchs (fenêtres temporelles de 5 secondes)** pour extraire des caractéristiques clés :
+                        </p>
+                        <ul>
+                            <li><strong>Le Volume de logs</strong> : Nombre total de messages générés pendant l'intervalle.</li>
+                            <li><strong>La Longueur moyenne</strong> : Taille moyenne en caractères des messages (indicateur de verbosité anormale).</li>
+                            <li><strong>La Fréquence d'anomalies textuelles</strong> : Nombre de lignes contenant les termes clés `WARN`, `ERROR` ou `Exception`.</li>
+                        </ul>
+                    </div>
+                    <div style="background: rgba(6, 182, 212, 0.05); border: 1px dashed rgba(6, 182, 212, 0.3); padding: 15px; border-radius: 8px; font-family: var(--font-mono); font-size: 0.8rem; color: var(--color-primary);">
+                        Vecteur de Features généré : <br>
+                        <code>[volume_logs, avg_message_length, error_count]</code>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             SLIDE 5 : INTELLIGENCE ML (ISOLATION FOREST)
+             ========================================== -->
+        <div class="slide" id="slide-4">
+            <h2>Étape 2 : Machine Learning Non Supervisé avec Isolation Forest</h2>
+            <div class="ml-concept-grid">
+                <!-- Visualisation interactive de l'arbre d'isolation -->
+                <div class="tree-visualizer">
+                    <svg class="tree-svg" viewBox="0 0 400 300">
+                        <!-- Connexions entre les nœuds -->
+                        <line x1="200" y1="40" x2="100" y2="100" class="link-line" />
+                        <line x1="200" y1="40" x2="300" y2="100" class="link-line" />
+                        <line x1="100" y1="100" x2="60" y2="180" class="link-line" />
+                        <line x1="100" y1="100" x2="140" y2="180" class="link-line" />
+                        
+                        <!-- Chemin d'anomalie court -->
+                        <line x1="300" y1="100" x2="260" y2="180" class="link-line anomaly-path" />
+                        <line x1="300" y1="100" x2="340" y2="180" class="link-line" />
+                        
+                        <!-- Nœuds normaux -->
+                        <circle cx="200" cy="40" r="12" class="node-circle" />
+                        <circle cx="100" cy="100" r="10" class="node-circle" />
+                        <circle cx="60" cy="180" r="8" class="node-circle" />
+                        <circle cx="140" cy="180" r="8" class="node-circle" />
+                        
+                        <circle cx="300" cy="100" r="10" class="node-circle" />
+                        <circle cx="340" cy="180" r="8" class="node-circle" />
+                        
+                        <!-- Nœud Anormal : Isolé très vite (chemin court, profondeur = 2) -->
+                        <circle cx="260" cy="180" r="12" class="node-circle anomaly" />
+                    </svg>
+                    
+                    <div class="tree-legend">
+                        <div class="legend-item"><span style="width: 10px; height: 10px; background: #1e293b; border: 1px solid #475569; display: inline-block; border-radius: 50%;"></span> Normal (Profond)</div>
+                        <div class="legend-item"><span style="width: 10px; height: 10px; background: rgba(239, 68, 68, 0.4); border: 2px solid var(--color-danger); display: inline-block; border-radius: 50%;"></span> Anomalie (Proche)</div>
+                    </div>
+                </div>
+
+                <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <h3 style="color: var(--color-secondary); margin-bottom: 12px; font-family: var(--font-title);">Le Choix d'Isolation Forest</h3>
+                        <p style="line-height: 1.5; color: var(--color-text-muted); margin-bottom: 12px; font-size: 0.95rem;">
+                            L'algorithme **Isolation Forest** (de scikit-learn) repose sur le principe suivant : les anomalies sont **rares et différentes** des données normales.
+                        </p>
+                        <ul>
+                            <li><strong>Non Supervisé</strong> : Pas besoin de labelliser manuellement des données d'entraînement complexes.</li>
+                            <li><strong>Principe de partitionnement</strong> : On découpe aléatoirement les attributs. Les données anormales se retrouvent isolées très rapidement dans l'arbre (profondeur d'arbre courte).</li>
+                            <li><strong>Performant en streaming</strong> : Complexité algorithmique faible $O(n)$, idéal pour un calcul régulier à chaque micro-batch de Spark.</li>
+                        </ul>
+                    </div>
+                    <div style="background: rgba(139, 92, 246, 0.05); border: 1px dashed rgba(139, 92, 246, 0.3); padding: 12px; border-radius: 8px; font-size: 0.8rem;">
+                        <strong style="color: var(--color-secondary);">Sortie du modèle :</strong> Score d'anomalie compris entre -1 (anomalie critique) et 1 (comportement parfaitement stable).
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             SLIDE 6 : STREAMING ET INGESTION KAFKA/SPARK
+             ========================================== -->
+        <div class="slide" id="slide-5">
+            <h2>Étape 3 & 4 : Ingestion Kafka & Streaming PySpark</h2>
+            <div class="live-console-grid">
+                <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <h3 style="color: var(--color-primary); margin-bottom: 15px; font-family: var(--font-title);">Flux de Communication Asynchrone</h3>
+                        <ul>
+                            <li><strong>Producteur Python (`producer.py`)</strong> :
+                                Lit le fichier HDFS ligne par ligne et écrit instantanément les logs au format JSON dans le topic Kafka `hdfs-logs`. Il simule une activité continue.
+                            </li>
+                            <li><strong>Apache Kafka (Topic)</strong> :
+                                Agit comme un buffer de sécurité. Si Spark ralentit, les logs s'y accumulent sans perte (mécanisme de tolérance aux pannes).
+                            </li>
+                            <li><strong>Spark Structured Streaming (`spark_ml.py`)</strong> :
+                                Lit en temps réel, extrait les métriques du batch courant et applique le modèle Isolation Forest.
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-card); padding: 15px; border-radius: 8px;">
+                        <strong style="color: var(--color-primary); font-family: var(--font-mono); font-size: 0.85rem;">Découplage Applicatif :</strong>
+                        <p style="font-size: 0.8rem; color: var(--color-text-muted); margin-top: 5px;">Le producteur et le consommateur Spark fonctionnent de façon asynchrone grâce à Kafka.</p>
+                    </div>
+                </div>
+
+                <!-- Simulation d'une console de Spark Streaming -->
+                <div class="spark-stream-console">
+                    <div class="console-header-bar">
+                        <span>⚡ Apache Spark Structured Streaming Engine</span>
+                        <button class="btn-start-stream" onclick="runConsoleSimulation()">Démarrer l'Analyse</button>
+                    </div>
+                    <div class="console-flow" id="console-stream-flow">
+                        <!-- Rempli par JavaScript lors de la simulation -->
+                        <div style="color: var(--color-text-muted); text-align: center; margin-top: 80px;">Appuyez sur "Démarrer l'Analyse" pour écouter le topic Kafka...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             SLIDE 7 : METRIQUES ET GRAPHES (GRAFANA)
+             ========================================== -->
+        <div class="slide" id="slide-6">
+            <h2>Étape 5 : Monitoring en Temps Réel avec Prometheus & Grafana</h2>
+            <div class="grid-2col">
+                <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <h3 style="color: var(--color-primary); margin-bottom: 12px; font-family: var(--font-title);">Le Stockage & l'Alerte</h3>
+                        <p style="line-height: 1.5; color: var(--color-text-muted); margin-bottom: 10px; font-size: 0.95rem;">
+                            Afin de rendre les détections du modèle ML exploitables par des équipes opérationnelles :
+                        </p>
+                        <ul>
+                            <li><strong>Le Défi du Push</strong> : Prometheus est basé sur du "Pull" (il interroge des serveurs). Spark Streaming fonctionnant en batchs éphémères n'expose pas de serveur stable.</li>
+                            <li><strong>La Solution</strong> : Nous intégrons **Pushgateway**. À la fin de chaque batch de 5 secondes, Spark pousse les métriques vers le Pushgateway, que Prometheus vient lire régulièrement.</li>
+                            <li><strong>Grafana UI</strong> : Dashboard connecté à Prometheus pour visualiser en temps réel les dérives.</li>
+                        </ul>
+                    </div>
+                    <div style="background: rgba(16, 185, 129, 0.05); border: 1px dashed rgba(16, 185, 129, 0.3); padding: 12px; border-radius: 8px; font-size: 0.8rem; color: var(--color-success);">
+                        💡 <strong>Rafraîchissement automatique :</strong> Toutes les 5 secondes, le dashboard Grafana se met à jour pour offrir un monitoring réactif.
+                    </div>
+                </div>
+
+                <!-- Simulation de Dashboard Grafana -->
+                <div class="grafana-simulator">
+                    <div class="grafana-nav">
+                        <div class="grafana-title">📊 Grafana - Dashboard Performance APM</div>
+                        <div class="grafana-refresh">
+                            <span class="refresh-icon">🔄</span> Rafraîchi (5s)
+                        </div>
+                    </div>
+                    <div class="grafana-grid">
+                        <div class="grafana-panel">
+                            <div class="panel-title">Trafic de Logs (5s)</div>
+                            <div class="panel-value cyan-val" id="g-volume">124</div>
+                            <div style="font-size: 0.7rem; color: #8e9093;">messages/batch</div>
+                        </div>
+                        <div class="grafana-panel">
+                            <div class="panel-title">Score ML moyen</div>
+                            <div class="panel-value purple-val" id="g-score">0.82</div>
+                            <div style="font-size: 0.7rem; color: #8e9093;">[normal: +1, anomalie: -1]</div>
+                        </div>
+                        <div class="grafana-panel" id="g-alert-panel">
+                            <div class="panel-title">Statut Système</div>
+                            <div class="panel-value" id="g-status" style="color: var(--color-success); font-size: 1.5rem;">STABLE</div>
+                            <div class="pulse-light" id="g-pulse"></div>
+                        </div>
+                    </div>
+                    <div style="text-align: center; margin-top: 10px;">
+                        <button class="btn-start-stream" style="background-color: #2f3032; border: 1px solid #4a4b4c;" onclick="simulateGrafanaValues()">Simuler une Anomalie</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             SLIDE 8 : SYNTHESE & PERSPECTIVES
+             ========================================== -->
+        <div class="slide" id="slide-7">
+            <h2>Synthèse & Perspectives</h2>
+            <div class="grid-2col">
+                <div class="card">
+                    <h3 style="color: var(--color-success); margin-bottom: 15px; font-family: var(--font-title);">Points Forts du Projet APM</h3>
+                    <ul>
+                        <li><strong>Scalabilité et Haute Disponibilité</strong> : Grâce à l'utilisation combinée d'Apache Kafka et d'Apache Spark. Si le volume multiplie par 10, l'architecture distribue la charge de calcul.</li>
+                        <li><strong>Détection Proactive Non Supervisée</strong> : Isolation Forest identifie des anomalies de performances complexes non prévisibles à l'écriture de règles de seuil fixes.</li>
+                        <li><strong>Pipeline Réactif en Temps Réel</strong> : L'ingestion par micro-batchs et l'alerting Grafana permettent de réduire le temps de diagnostic de plusieurs heures à quelques secondes.</li>
+                    </ul>
+                </div>
+                <div class="card" style="border-color: rgba(6, 182, 212, 0.2);">
+                    <h3 style="color: var(--color-primary); margin-bottom: 15px; font-family: var(--font-title);">Perspectives d'Amélioration</h3>
+                    <ul>
+                        <li><strong>Pipeline d'Alerting Direct</strong> : Connecter Grafana à des webhooks pour notifier les équipes de développement directement sur Slack ou Discord en cas d'anomalie critique.</li>
+                        <li><strong>Affinage du Modèle de ML</strong> : Intégrer de l'analyse sémantique NLP (Natural Language Processing) sur les messages de logs (ex: TF-IDF ou Word2Vec) en plus du volume et de la longueur.</li>
+                        <li><strong>Optimisation des Hyperparamètres</strong> : Ajuster la taille de la fenêtre de micro-batchs pour équilibrer la précision de détection et la charge de calcul de Spark.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ==========================================================================
+         BARRE DE NAVIGATION DU BAS (DE DIAPOSITIVES)
+         ========================================================================== -->
+    <footer>
+        <div class="nav-controls">
+            <button class="nav-btn" onclick="navigateSlide(-1)">◀ Précédent</button>
+            <button class="nav-btn" onclick="navigateSlide(1)">Suivant ▶</button>
+        </div>
+        
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="slide-progress"></div>
+        </div>
+        
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <span style="font-size: 0.8rem; color: var(--color-text-muted);">
+                Touches : <span class="kbd-badge">◀</span> ou <span class="kbd-badge">▶</span>
+            </span>
+            <div class="slide-counter" id="slide-counter-txt">Slide 1 / 8</div>
+        </div>
+    </footer>
+
+    <!-- ==========================================================================
+         LOGIQUE JAVASCRIPT DE NAVIGATION ET DE SIMULATIONS DYNAMIQUES
+         ========================================================================== -->
+    <script>
+        // Gestion des diaporamas
+        let currentSlideIndex = 0;
+        const slides = document.querySelectorAll('.slide');
+        const progressBar = document.getElementById('slide-progress');
+        const counterTxt = document.getElementById('slide-counter-txt');
+
+        /**
+         * Met à jour l'affichage des slides en fonction de l'index actuel.
+         */
+        function updateSlideDisplay() {
+            slides.forEach((slide, index) => {
+                if (index === currentSlideIndex) {
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.remove('active');
+                }
+            });
+            
+            // Calcul et mise à jour de la barre de progression
+            const percentage = (currentSlideIndex / (slides.length - 1)) * 100;
+            progressBar.style.width = percentage + '%';
+            
+            // Compteur de slide
+            counterTxt.innerText = `Slide ${currentSlideIndex + 1} / ${slides.length}`;
+        }
+
+        /**
+         * Navigue d'un certain nombre de pas en avant ou en arrière.
+         */
+        function navigateSlide(direction) {
+            currentSlideIndex += direction;
+            if (currentSlideIndex < 0) {
+                currentSlideIndex = 0;
+            } else if (currentSlideIndex >= slides.length) {
+                currentSlideIndex = slides.length - 1;
+            }
+            updateSlideDisplay();
+        }
+
+        // Écouteur de clavier pour faciliter la présentation orale
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                navigateSlide(1);
+            } else if (e.key === 'ArrowLeft') {
+                navigateSlide(-1);
+            }
+        });
+
+        // ==========================================================================
+        // SCRIPT DIAPO 3 : SCHÉMA INTERACTIF DU PIPELINE
+        // ==========================================================================
+        const nodeDescriptions = {
+            hdfs: "<strong>Logs Source (HDFS Logs) :</strong> Le point de départ. Ce sont les fichiers de journaux bruts générés par l'infrastructure cloud Hadoop HDFS. Ils constituent notre dataset de base pour simuler le comportement d'une application réelle.",
+            producer: "<strong>Producteur Python (producer.py) :</strong> Ce script simule une production en continu. Il charge le fichier de logs et envoie chaque ligne vers Kafka avec un léger délai pour simuler un streaming de production.",
+            kafka: "<strong>Apache Kafka :</strong> Agit comme le courtier de messages. Il reçoit les logs du producteur et les stocke de manière sécurisée sous forme de file d'attente (Topic 'hdfs-logs'). Il assure le découplage entre ingestion et analyse.",
+            spark: "<strong>Apache Spark (PySpark ML) :</strong> Consomme les événements de Kafka toutes les 5 secondes. Il convertit les messages, calcule des caractéristiques statistiques sur la fenêtre de calcul, puis applique le modèle Isolation Forest pour évaluer l'état du système.",
+            prometheus: "<strong>Prometheus & Pushgateway :</strong> Spark pousse les résultats calculés (volume de logs, score de déviation) vers le Pushgateway. Prometheus se connecte ensuite régulièrement à ce point d'accès pour collecter et stocker ces séries temporelles.",
+            grafana: "<strong>Grafana Dashboard :</strong> L'interface graphique de monitoring. Connectée à Prometheus, elle récupère les statistiques de performance et de détection de dérive pour les afficher sous forme de cadrans de bord intuitifs."
+        };
+
+        /**
+         * Affiche la description du composant du pipeline sélectionné.
+         */
+        function showNodeDesc(nodeKey) {
+            // Mise à jour de l'apparence des nœuds
+            const nodes = document.querySelectorAll('.pipeline-node');
+            nodes.forEach(node => node.classList.remove('active'));
+            
+            // Trouve le nœud cliqué et l'active
+            event.currentTarget.classList.add('active');
+            
+            // Met à jour la boîte textuelle descriptive
+            const descBox = document.getElementById('pipeline-desc');
+            descBox.innerHTML = nodeDescriptions[nodeKey];
+            descBox.style.borderLeftColor = nodeKey === 'spark' ? 'var(--color-secondary)' : 'var(--color-primary)';
+        }
+
+        // ==========================================================================
+        // SCRIPT DIAPO 6 : ANALYSE TEMPS REEL SPARK STREAMING
+        // ==========================================================================
+        let streamInterval = null;
+        
+        /**
+         * Simule l'affichage des résultats de Spark Structured Streaming en direct
+         */
+        function runConsoleSimulation() {
+            const flowContainer = document.getElementById('console-stream-flow');
+            
+            // Si la simulation tourne déjà, on l'arrête
+            if (streamInterval) {
+                clearInterval(streamInterval);
+                streamInterval = null;
+                flowContainer.innerHTML = '<div style="color: var(--color-text-muted); text-align: center; margin-top: 80px;">Analyse arrêtée.</div>';
+                return;
+            }
+            
+            flowContainer.innerHTML = '';
+            let batchCount = 1;
+            
+            // Lancement d'un intervalle d'affichage de logs simulant les micro-batchs de Spark
+            streamInterval = setInterval(() => {
+                const now = new Date();
+                const timeStr = now.toTimeString().split(' ')[0];
+                const line = document.createElement('div');
+                line.className = 'console-line';
+                
+                // Simulation d'une anomalie périodique (tous les 4 batchs)
+                const isAnomaly = batchCount % 4 === 0;
+                const statusText = isAnomaly ? 'ANOMALY DETECTED' : 'NORMAL';
+                const statusClass = isAnomaly ? 'anomaly' : 'normal';
+                
+                // Variables fluctuantes pour illustrer
+                const vol = isAnomaly ? Math.floor(Math.random() * 200) + 300 : Math.floor(Math.random() * 80) + 40;
+                const length = isAnomaly ? Math.floor(Math.random() * 500) + 400 : Math.floor(Math.random() * 60) + 80;
+                
+                line.innerHTML = `
+                    <span class="line-timestamp">[${timeStr}]</span>
+                    <span class="line-message">Batch #${batchCount} - logs=${vol} msgLen=${length}</span>
+                    <span class="line-status ${statusClass}">${statusText}</span>
+                `;
+                
+                flowContainer.appendChild(line);
+                
+                // Garder les 7 dernières lignes visibles
+                if (flowContainer.children.length > 7) {
+                    flowContainer.removeChild(flowContainer.firstChild);
+                }
+                
+                batchCount++;
+            }, 2000);
+        }
+
+        // ==========================================================================
+        // SCRIPT DIAPO 7 : SIMULATEUR DE DASHBOARD GRAFANA
+        // ==========================================================================
+        let grafanaInterval = null;
+        
+        // Valeurs par défaut du dashboard
+        let defaultVolume = 120;
+        let defaultScore = 0.85;
+        let isAnomalyTriggered = false;
+
+        /**
+         * Fait osciller légèrement les valeurs du dashboard pour faire plus vrai
+         */
+        function animateGrafanaValues() {
+            if (grafanaInterval) return;
+            
+            grafanaInterval = setInterval(() => {
+                if (!isAnomalyTriggered) {
+                    // En temps normal, de petites variations
+                    document.getElementById('g-volume').innerText = Math.floor(defaultVolume + (Math.random() * 20 - 10));
+                    document.getElementById('g-score').innerText = (defaultScore + (Math.random() * 0.1 - 0.05)).toFixed(2);
+                }
+            }, 2000);
+        }
+
+        /**
+         * Provoque ou éteint une anomalie majeure dans la simulation Grafana
+         */
+        function simulateGrafanaValues() {
+            const volEl = document.getElementById('g-volume');
+            const scoreEl = document.getElementById('g-score');
+            const statusEl = document.getElementById('g-status');
+            const pulseEl = document.getElementById('g-pulse');
+            const alertPanel = document.getElementById('g-alert-panel');
+            
+            isAnomalyTriggered = !isAnomalyTriggered;
+            
+            if (isAnomalyTriggered) {
+                // Dérive d'anomalie critique
+                volEl.innerText = "584"; // Explosion du volume de logs
+                volEl.style.color = "var(--color-danger)";
+                
+                scoreEl.innerText = "-0.45"; // Le score s'effondre en négatif
+                scoreEl.style.color = "var(--color-danger)";
+                
+                statusEl.innerText = "ALERTE";
+                statusEl.style.color = "var(--color-danger)";
+                
+                pulseEl.classList.add('anomaly-on');
+                alertPanel.style.borderColor = "var(--color-danger)";
+            } else {
+                // Retour à la normale
+                volEl.innerText = "120";
+                volEl.style.color = "#38bdf8";
+                
+                scoreEl.innerText = "0.85";
+                scoreEl.style.color = "#a78bfa";
+                
+                statusEl.innerText = "STABLE";
+                statusEl.style.color = "var(--color-success)";
+                
+                pulseEl.classList.remove('anomaly-on');
+                alertPanel.style.borderColor = "var(--border-card)";
+            }
+        }
+
+        // Lancement des animations secondaires au chargement
+        window.addEventListener('DOMContentLoaded', () => {
+            updateSlideDisplay();
+            animateGrafanaValues();
+        });
+    </script>
+</body>
+</html>

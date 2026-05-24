@@ -5,7 +5,19 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "links": [],
+  "links": [
+    {
+      "asDropdown": false,
+      "icon": "external link",
+      "includeVars": false,
+      "keepTime": false,
+      "targetBlank": true,
+      "title": "Custom Dashboard (Port 8080)",
+      "tooltip": "Accéder au dashboard interactif personnalisé",
+      "type": "link",
+      "url": "http://localhost:8080"
+    }
+  ],
   "liveNow": false,
   "panels": [
     {
@@ -16,7 +28,8 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
+            "fixedColor": "cyan",
+            "mode": "fixed"
           },
           "custom": {
             "axisCenteredZero": false,
@@ -93,7 +106,7 @@
           },
           "editorMode": "code",
           "expr": "apm_log_count",
-          "legendFormat": "__auto",
+          "legendFormat": "Volume",
           "range": true,
           "refId": "A"
         }
@@ -109,7 +122,8 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
+            "fixedColor": "purple",
+            "mode": "fixed"
           },
           "custom": {
             "axisCenteredZero": false,
@@ -146,12 +160,12 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
+                "color": "red",
                 "value": null
               },
               {
-                "color": "red",
-                "value": 80
+                "color": "green",
+                "value": -0.15
               }
             ]
           }
@@ -267,7 +281,7 @@
           },
           "editorMode": "code",
           "expr": "apm_is_anomaly",
-          "legendFormat": "__auto",
+          "legendFormat": "Statut",
           "range": true,
           "refId": "A"
         }

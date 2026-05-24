@@ -13,3 +13,9 @@ Prometheus : http://localhost:9090
 Le rapport explicatif détaillé se trouve dans le fichier rapport_analyse.md.
 
 Source des données: https://github.com/logpai/loghub/tree/master/HDFS
+
+## Mises à jour récentes
+- Amélioration de l'interface Grafana et des requêtes Prometheus.
+- Intégration d'un tableau de bord web (`dashboard_web`).
+- Mise à jour des scripts de Machine Learning et du producteur de logs.
+- Ajout du support pour la présentation de soutenance (`presentation_soutenance_apm.html`).

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<!-- Copyright par Pascale Nancy Alia AKPO -->
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APM - Détection d'Anomalies de Performance Applicative</title>
+    <!-- Chargement d'une police moderne depuis Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <!-- Icones pour le tableau de bord -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Librairie de graphiques Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Styles personnalisés -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="theme-cyberpunk">
+    <!-- Overlay d'alerte en cas d'anomalie critique -->
+    <div id="anomaly-overlay" class="anomaly-overlay hidden"></div>
+
+    <div class="app-container">
+        <!-- Barre latérale de contrôle et de personnalisation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fa-solid fa-gauge-high"></i>
+                    <span>APM MONITOR</span>
+                </div>
+                <p class="subtitle">By Pascale AKPO</p>
+            </div>
+
+            <!-- Section Personnalisation : Choix des Thèmes et Couleurs -->
+            <div class="sidebar-section">
+                <h3><i class="fa-solid fa-palette"></i> Personnalisation</h3>
+                <div class="form-group">
+                    <label for="theme-selector">Thème visuel</label>
+                    <select id="theme-selector" class="custom-select">
+                        <option value="theme-cyberpunk" selected>Cyberpunk Néon</option>
+                        <option value="theme-emerald">Vert Émeraude</option>
+                        <option value="theme-midnight">Bleu Minuit Glass</option>
+                        <option value="theme-dracula">Dracula Sombre</option>
+                        <option value="theme-sunset">Sunset Orange</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin-top: 10px;">
+                    <label for="time-range-selector">Plage temporelle</label>
+                    <select id="time-range-selector" class="custom-select">
+                        <option value="300" selected>Dernières 5 minutes</option>
+                        <option value="900">Dernières 15 minutes</option>
+                        <option value="1800">Dernières 30 minutes</option>
+                        <option value="3600">Dernière heure</option>
+                        <option value="10800">Dernières 3 heures</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Section Alertes ML : Réglage dynamique des seuils -->
+            <div class="sidebar-section">
+                <h3><i class="fa-solid fa-brain"></i> Détection & Seuils</h3>
+                <div class="form-group">
+                    <div class="slider-header">
+                        <label for="threshold-slider">Seuil d'anomalie</label>
+                        <span id="threshold-val">-0.15</span>
+                    </div>
+                    <input type="range" id="threshold-slider" min="-0.4" max="0.2" step="0.01" value="-0.15" class="custom-slider">
+                    <small class="help-text">Si le score descend en dessous de ce seuil, une alerte est levée.</small>
+                </div>
+            </div>
+
+            <!-- Section Contrôle de la Simulation : Vitesse et Pause -->
+            <div class="sidebar-section">
+                <h3><i class="fa-solid fa-sliders"></i> Simulation (Kafka)</h3>
+                <div class="control-buttons">
+                    <button id="btn-play-pause" class="btn btn-primary">
+                        <i class="fa-solid fa-pause"></i> <span id="btn-play-pause-text">Pause</span>
+                    </button>
+                </div>
+                <div class="form-group" style="margin-top: 15px;">
+                    <div class="slider-header">
+                        <label for="speed-slider">Délai d'envoi logs</label>
+                        <span id="speed-val">0.10s</span>
+                    </div>
+                    <input type="range" id="speed-slider" min="0.01" max="2.0" step="0.05" value="0.10" class="custom-slider">
+                    <small class="help-text">Un délai plus court simule un pic d'activité (charge élevée).</small>
+                </div>
+            </div>
+
+            <!-- Section Sélection des Panels : Afficher/Masquer -->
+            <div class="sidebar-section">
+                <h3><i class="fa-solid fa-layer-group"></i> Disposition</h3>
+                <div class="checkbox-group">
+                    <label class="custom-checkbox">
+                        <input type="checkbox" id="chk-status" checked>
+                        <span class="checkmark"></span>
+                        Statut Global (Stat Card)
+                    </label>
+                    <label class="custom-checkbox">
+                        <input type="checkbox" id="chk-vol-chart" checked>
+                        <span class="checkmark"></span>
+                        Graphique Volume Logs
+                    </label>
+                    <label class="custom-checkbox">
+                        <input type="checkbox" id="chk-score-chart" checked>
+                        <span class="checkmark"></span>
+                        Graphique Anomaly Score
+                    </label>
+                    <label class="custom-checkbox">
+                        <input type="checkbox" id="chk-terminal" checked>
+                        <span class="checkmark"></span>
+                        Terminal Logs HDFS
+                    </label>
+                </div>
+            </div>
+
+            <!-- Pied de page avec actions rapides -->
+            <div class="sidebar-footer" style="display: flex; flex-direction: column; gap: 10px;">
+                <button id="btn-export-pdf" class="btn btn-primary" style="background-color: var(--normal-color); color: #000; box-shadow: 0 0 12px var(--normal-color);">
+                    <i class="fa-solid fa-file-pdf"></i> Exporter en PDF
+                </button>
+                <button id="btn-export-json" class="btn btn-secondary">
+                    <i class="fa-solid fa-file-code"></i> Exporter en JSON
+                </button>
+            </div>
+        </aside>
+
+        <!-- Zone principale de visualisation -->
+        <main class="main-content">
+            <header class="main-header">
+                <h1>Supervision APM en Temps Réel</h1>
+                <div class="status-indicator">
+                    <span class="pulse-dot"></span>
+                    <span id="pipeline-status">Pipeline Actif</span>
+                </div>
+            </header>
+
+            <!-- Grille des Panneaux (Dashboard Grid) -->
+            <div class="dashboard-grid">
+                
+                <!-- Panel 1: Statut global (Alerte Machine Learning) -->
+                <div class="grid-card status-card" id="panel-status">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-shield-halved"></i> Diagnostic Machine Learning</h2>
+                    </div>
+                    <div class="card-body status-container" id="status-box">
+                        <div class="status-content">
+                            <span id="status-title">NORMAL</span>
+                            <p id="status-desc">Le modèle ML évalue le comportement comme stable.</p>
+                        </div>
+                        <div class="status-metrics">
+                            <div class="mini-metric">
+                                <span class="label">Volume Batch</span>
+                                <span class="value" id="metric-vol">0</span>
+                            </div>
+                            <div class="mini-metric">
+                                <span class="label">Score d'Anomalie</span>
+                                <span class="value" id="metric-score">0.000</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Panel 2: Graphique Volume Logs -->
+                <div class="grid-card" id="panel-vol-chart">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-chart-line"></i> Volume des logs par batch (5s)</h2>
+                    </div>
+                    <div class="card-body chart-wrapper">
+                        <canvas id="volChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Panel 3: Graphique Anomaly Score (ML) -->
+                <div class="grid-card" id="panel-score-chart">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-chart-area"></i> Score d'Anomalie (Isolation Forest)</h2>
+                    </div>
+                    <div class="card-body chart-wrapper">
+                        <canvas id="scoreChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Panel 4: Terminal de Streaming de Logs HDFS -->
+                <div class="grid-card terminal-card" id="panel-terminal">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-terminal"></i> Ingestion de Logs HDFS en Direct (Kafka)</h2>
+                    </div>
+                    <div class="card-body terminal-body">
+                        <div class="terminal-header">
+                            <span class="term-dot red"></span>
+                            <span class="term-dot yellow"></span>
+                            <span class="term-dot green"></span>
+                            <span class="term-title">kafka-console-consumer --topic apm-metrics</span>
+                        </div>
+                        <div class="terminal-content" id="log-terminal">
+                            <!-- Les logs HDFS s'injecteront ici sous forme de lignes colorées -->
+                            <div class="log-line system">[SYSTEM] En attente de connexion à Kafka...</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts Logique -->
+    <script src="script.js"></script>
+</body>
+</html>
